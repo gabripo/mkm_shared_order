@@ -116,7 +116,7 @@ if __name__=="__main__":
     for shipID, shipDetails in shipmentsDetails.items():
         if shipDetails['cardOrdersCurrShipm']:
             for card in shipDetails['cardOrdersCurrShipm']:
-                print(f"{card['cardQuantity']} {card['cardName']} in shipment {shipID} (seller {shipDetails['sellerName']} is not in any list!)")
+                print(f"{card['cardQuantity']} {card['cardName']} in shipment {shipID} (seller {shipDetails['sellerName']} is not in any list!")
                 spareCardsCost += round(card['cardCost']*float(card['cardQuantity']), 2)
     print(f"\nTotal cost of spare cards (without shipping): {spareCardsCost}")
                 
