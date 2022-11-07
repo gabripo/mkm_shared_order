@@ -125,7 +125,8 @@ if __name__=="__main__":
     totCostAng = total_cost_by_list(shipmentsDetails, involvedAng, "Angelo")
     shipmentsDetails, involvedSpareCards = find_shipping_by_list(shipmentsDetails, simpleCardsList)
     totCostSpareCards = total_cost_by_list(shipmentsDetails, involvedSpareCards, "spare cards")
-    assert round(totCostGab+totCostFed+totCostAng+totCostSpareCards, 2) \
-        == costs['totalCost'], "Total cost of cards does not match!"
+    totCost = round(totCostGab+totCostFed+totCostAng+totCostSpareCards, 2)
+    assert abs(totCost - costs['totalCost']) < 0.01, \
+        "Total cost of cards does not match!"
     
     
