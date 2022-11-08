@@ -40,22 +40,25 @@ def find_shipping_by_list(shipmentsDetails, listOfSomeone, listOwner=""):
         print(f"Checking involved shipments of {listOwner}...")
     involvedShipments = {}
     for shipID, shipDetails in shipmentsDetails.items():
-        foundCardsCostThisShipm = []
-        idxsCardToRemove = []
+        foundCardsCostThisShipm = {}
         for idx, card in enumerate(shipDetails['cardOrders']):
             simpleName = parse_gmail_mkm.simplify_card_name(card['cardName'])
+            cardsInOrder = card['cardQuantity']
             if simpleName in listOfSomeone:
-                if listOfSomeone[simpleName] <= card['cardQuantity']:
+                if listOfSomeone[simpleName] <= cardsInOrder:
+                    foundCards = listOfSomeone[simpleName]
                     del listOfSomeone[simpleName]
                 else:
-                    listOfSomeone[simpleName] -= card['cardQuantity']
-                #print(f"{simpleName} found in shipment {shipID} {card['cardQuantity']} times")
-                foundCardsCostThisShipm.append([simpleName, card['cardQuantity'], card['cardCost']*float(card['cardQuantity'])])
-                idxsCardToRemove.append(idx)
+                    foundCards = cardsInOrder
+                    listOfSomeone[simpleName] -= cardsInOrder
+                assert foundCards <= cardsInOrder, \
+                    f"Error while processing shipping {shipID}"
+                shipDetails['cardOrders'][idx]['cardQuantity'] -= foundCards
+                foundCardsCostThisShipm.update({simpleName:[foundCards, card['cardCost']*float(foundCards)]})
+        # Removing cards while looping not possible, doing it later
         if foundCardsCostThisShipm:
             involvedShipments.update({shipID:foundCardsCostThisShipm})
-            for idxCardToRemove in sorted(idxsCardToRemove, reverse=True):
-                del shipmentsDetails[shipID]['cardOrders'][idxCardToRemove]
+            shipDetails['cardOrders'] = [cardOrder for cardOrder in shipDetails['cardOrders'] if cardOrder['cardQuantity'] != 0]
     return involvedShipments
 
 def total_cost_by_list(shipmentsDetails, involvedShipments, listOwner=""):
@@ -65,9 +68,11 @@ def total_cost_by_list(shipmentsDetails, involvedShipments, listOwner=""):
     for shipID, cardCosts in involvedShipments.items():
         shippingCost = shipmentsDetails[shipID]['shippingCost'] + shipmentsDetails[shipID]['fee']
         totCardsInOrder = shipmentsDetails[shipID]['totCards']
-        numCardsInOrder = sum([card[1] for card in cardCosts])
+        numCardsInOrder = sum([el[0] for el in cardCosts.values()])
+        assert numCardsInOrder / totCardsInOrder <= 1, \
+            f"Wrong number of cards in order {shipID}!"
         involvedCostThisShipm = round(numCardsInOrder / totCardsInOrder * shippingCost, 2)
-        costCardsInOrder = sum([card[2] for card in cardCosts])
+        costCardsInOrder = sum([el[1] for el in cardCosts.values()])
         print(f"Order {shipID} - seller {shipmentsDetails[shipID]['sellerName']} : {involvedCostThisShipm} for shipping, {costCardsInOrder} for cards, {shipmentsDetails[shipID]['fee']} as fee")
         shipmentData = {'involvedCostThisShipm':involvedCostThisShipm, \
                         'costCardsInOrder':costCardsInOrder, \
@@ -117,8 +122,10 @@ if __name__=="__main__":
     for shipID, shipDetails in shipmentsDetails.items():
         if shipDetails['cardOrders']:
             for card in shipDetails['cardOrders']:
-                print(f"{card['cardQuantity']} {card['cardName']} in shipment {shipID} (seller {shipDetails['sellerName']} is not in any list!")
-                spareCardsCost += round(card['cardCost']*float(card['cardQuantity']), 2)
+                numSpareCards = card['cardQuantity']
+                spareCardsQuantity += numSpareCards
+                print(f"{numSpareCards} {card['cardName']} in shipment {shipID} (seller {shipDetails['sellerName']} is not in any list!")
+                spareCardsCost += round(card['cardCost']*float(numSpareCards), 2)
     print(f"\nTotal cost of spare cards (without shipping): {spareCardsCost}")
                 
     totCostGab = total_cost_by_list(shipmentsDetails, involvedGab, "Gabriele")
