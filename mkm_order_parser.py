@@ -73,10 +73,13 @@ def total_cost_by_list(shipmentsDetails, involvedShipments, listOwner=""):
             f"Wrong number of cards in order {shipID}!"
         involvedCostThisShipm = round(numCardsInOrder / totCardsInOrder * shippingCost, 2)
         costCardsInOrder = sum([el[1] for el in cardCosts.values()])
-        print(f"Order {shipID} - seller {shipmentsDetails[shipID]['sellerName']} : {involvedCostThisShipm} for shipping, {costCardsInOrder} for cards, {shipmentsDetails[shipID]['fee']} as fee")
+        #print(f"Order {shipID} - seller {shipmentsDetails[shipID]['sellerName']} : {involvedCostThisShipm} for shipping, {costCardsInOrder} for cards, {shipmentsDetails[shipID]['fee']} as fee")
         shipmentData = {'involvedCostThisShipm':involvedCostThisShipm, \
                         'costCardsInOrder':costCardsInOrder, \
                             'totalCost':involvedCostThisShipm+costCardsInOrder}
+        for cardName, cardDetails in cardCosts.items():
+            print(f"{cardDetails[0]} {cardName} ({cardDetails[1]}) for oder {shipID} - seller {shipmentsDetails[shipID]['sellerName']}")
+        print(f"==>{involvedCostThisShipm} shipping + {costCardsInOrder} cards ({shipmentsDetails[shipID]['fee']} fee) = {shipmentData['totalCost']}")
         ordersCost.update({shipID:shipmentData})
     totalCostCards = round(sum([cost['costCardsInOrder'] for cost in ordersCost.values()]), 2)
     print(f"Total cost of cards: {totalCostCards}")
