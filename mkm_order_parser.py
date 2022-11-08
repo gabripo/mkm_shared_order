@@ -35,6 +35,11 @@ def list_clean(cardList):
         del cardList[keyToDelete]
     return cardList
 
+def print_list(cardList):
+    for cardName, cardQuantity in cardList.items():
+        print(f"{cardQuantity} {cardName}")
+    return
+
 def find_shipping_by_list(shipmentsDetails, listOfSomeone, listOwner=""):
     if listOwner:
         print(f"Checking involved shipments of {listOwner}...")
@@ -111,14 +116,12 @@ if __name__=="__main__":
     listAng = read_cards.read_card_list(listAngFile)
     list_check(simpleCardsList, listAng, "Angelo")
     print("\nThe following cards were NOT found in the input card list:")
-    for cardName, cardQuantity in notFound.items():
-        print(f"{cardQuantity} {cardName}")
+    print_list(notFound)
     print(f"\nNumber of cards NOT found: {sum(notFound.values())}")
     print(f"Number of different cards NOT found: {len(notFound)}")
     
     print("\nSpare cards in the input card list, if missing removed:")
-    for cardName, cardQuantity in simpleCardsList.items():
-        print(f"{cardQuantity} {cardName}")
+    print_list(simpleCardsList)
     print("(The previous cards were not in the card lists but in the input card list)")
     
     involvedGab = find_shipping_by_list(shipmentsDetails, listGab, "Gabriele")
