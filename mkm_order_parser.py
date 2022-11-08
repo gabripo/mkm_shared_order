@@ -73,6 +73,7 @@ def find_shipping_by_list(shipmentsDetails, listOfSomeone, listOwner=""):
 def total_cost_by_list(shipmentsDetails, involvedShipments, listOwner=""):
     if listOwner:
         print(f"\nChecking involved shipments of {listOwner}...")
+        print("(Each card includes its cost per shipment plus its averaged share for the shipping+fees cost)")
     ordersCost = {}
     for shipID, cardCosts in involvedShipments.items():
         shippingCost = shipmentsDetails[shipID]['shippingCost'] + shipmentsDetails[shipID]['fee']
