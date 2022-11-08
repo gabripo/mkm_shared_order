@@ -118,7 +118,6 @@ if __name__=="__main__":
     involvedFed = find_shipping_by_list(shipmentsDetails, listFed, "Federico")
     involvedAng = find_shipping_by_list(shipmentsDetails, listAng, "Angelo")
     print("\nThe previous list should be equal to the following:")
-    spareCardsCost = 0
     spareCardsQuantity = 0
     for shipID, shipDetails in shipmentsDetails.items():
         if shipDetails['cardOrders']:
@@ -126,8 +125,6 @@ if __name__=="__main__":
                 numSpareCards = card['cardQuantity']
                 spareCardsQuantity += numSpareCards
                 print(f"{numSpareCards} {card['cardName']} in shipment {shipID} (seller {shipDetails['sellerName']} is not in any list!")
-                spareCardsCost += round(card['cardCost']*float(numSpareCards), 2)
-    print(f"\nTotal cost of spare cards (without shipping): {spareCardsCost}")
     assert sum(simpleCardsList.values()) == spareCardsQuantity, \
         "Number of spare cards does not match!"
                 
