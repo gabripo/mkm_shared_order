@@ -84,7 +84,7 @@ def parse_shipment_data(txtfilename, filepos=0):
     assert shippingCostFound, "Shipping cost not found!"
     assert feesFound, "Fees not found!"
     assert totalCostFound, "Total cost not found!"
-    assert (cardsCost+shippingCost+fees) == totalCost, \
+    assert round(cardsCost+shippingCost+fees, 2) == totalCost, \
         "Total cost does not match with others!"
     costs = {'cardsCost':cardsCost, 'shippingCost':shippingCost, \
              'fees':fees, 'totalCost':totalCost}
