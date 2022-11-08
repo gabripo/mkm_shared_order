@@ -54,7 +54,11 @@ def find_shipping_by_list(shipmentsDetails, listOfSomeone, listOwner=""):
                 assert foundCards <= cardsInOrder, \
                     f"Error while processing shipping {shipID}"
                 shipDetails['cardOrders'][idx]['cardQuantity'] -= foundCards
-                foundCardsCostThisShipm.update({simpleName:[foundCards, card['cardCost']*float(foundCards)]})
+                if simpleName in foundCardsCostThisShipm:
+                    foundCardsCostThisShipm[simpleName][0] += foundCards
+                    foundCardsCostThisShipm[simpleName][1] += card['cardCost']*float(foundCards)
+                else:
+                    foundCardsCostThisShipm.update({simpleName:[foundCards, card['cardCost']*float(foundCards)]})
         # Removing cards while looping not possible, doing it later
         if foundCardsCostThisShipm:
             involvedShipments.update({shipID:foundCardsCostThisShipm})
