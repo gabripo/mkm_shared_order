@@ -136,7 +136,9 @@ if __name__=="__main__":
     totCostAng = total_cost_by_list(shipmentsDetails, involvedAng, "Angelo")
     involvedSpareCards = find_shipping_by_list(shipmentsDetails, simpleCardsList)
     assert len([el for el in shipmentsDetails.values() if el['cardOrders']]) == 0, \
-        "Some shipments have not been processed!"
+        "Some shipments have not been processed - shipment details not empty!"
+    assert len(simpleCardsList) == 0, \
+        "Some shipments have not been processed - resulting cards list not empty!"
     
     totCostSpareCards = total_cost_by_list(shipmentsDetails, involvedSpareCards, "spare cards")
     totCost = round(totCostGab+totCostFed+totCostAng+totCostSpareCards, 2)
