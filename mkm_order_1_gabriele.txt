@@ -88,3 +88,6 @@
 2 Parapet
 4 Cliffgate
 4 Brainstorm
+5 Island
+5 Plains
+5 Mountain

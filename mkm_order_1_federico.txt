@@ -47,7 +47,6 @@
 4 Squadron Hawk
 4 Prismatic Strands
 4 Basilisk Gate
-4 Citadel Gate
 1 Heap Gate
 2 Arms of Hadar
 2 Gorilla Shaman
@@ -66,3 +65,6 @@
 2 Suffocating Fumes
 2 Standard Bearer
 1 Temporary Lockdown
+15 Island
+5 Mountain
+5 Plains
