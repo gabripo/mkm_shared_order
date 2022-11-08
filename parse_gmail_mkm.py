@@ -14,7 +14,7 @@ def parse_mail_txt(txtfilename):
     assert shipments.keys() == shipmentsDetails.keys(), \
         "Read shipments IDs differ among parsed data!"
     
-    totalCardsCost = round(sum([cards_cost_tot(el['cardOrdersCurrShipm']) \
+    totalCardsCost = round(sum([cards_cost_tot(el['cardOrders']) \
                  for el in shipmentsDetails.values()]), 2)
     assert totalCardsCost == costs['cardsCost'], "Wrong cards cost!"
     totalShippingsCost = round(sum([el['shippingCost'] \
@@ -126,23 +126,23 @@ def parse_shipment_details(txtfilename, filepos):
                     line = file.readline()
                 line = file.readline()
                 
-                cardOrdersCurrShipm = []
+                cardOrders = []
                 while "Shipping" not in line:
                     if "x" in line:
-                        cardOrdersCurrShipm.append(parse_card_order(line))
+                        cardOrders.append(parse_card_order(line))
                     line = file.readline()
                 shippingCost = cast_float(split_string_value(line, 1))
                 if round(shipmentPrice, 2) != \
-                    round(shippingCost+cards_cost_tot(cardOrdersCurrShipm),2):
+                    round(shippingCost+cards_cost_tot(cardOrders),2):
                         fee = round(shipmentPrice - \
-                            (shippingCost+cards_cost_tot(cardOrdersCurrShipm)), 2)
+                            (shippingCost+cards_cost_tot(cardOrders)), 2)
                         print(f"Shipment {shipmentID} with seller {sellerName} has a fee of {fee}")
                 else:
                     fee = 0
-                totCards = sum([card['cardQuantity'] for card in cardOrdersCurrShipm])
+                totCards = sum([card['cardQuantity'] for card in cardOrders])
                 shipmentData = {'sellerName':sellerName, \
                                 'shippingCost':shippingCost, \
-                                    'cardOrdersCurrShipm':cardOrdersCurrShipm,\
+                                    'cardOrders':cardOrders,\
                                         'fee':fee,\
                                             'totCards':totCards}
                 shipmentsDetails.update({shipmentID:shipmentData})
@@ -167,7 +167,7 @@ def cards_cost_tot(cardOrders):
 
 def cards_list(shipments):
     cardsList = {}
-    allCards = [el['cardOrdersCurrShipm'] for el in shipments.values()]
+    allCards = [el['cardOrders'] for el in shipments.values()]
     for ship in allCards:
         for card in ship:
             if card['cardName'] in cardsList:

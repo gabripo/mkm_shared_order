@@ -42,7 +42,7 @@ def find_shipping_by_list(shipments, listOfSomeone, listOwner=""):
     for shipID, shipDetails in shipments.items():
         foundCardsCostThisShipm = []
         idxsCardToRemove = []
-        for idx, card in enumerate(shipDetails['cardOrdersCurrShipm']):
+        for idx, card in enumerate(shipDetails['cardOrders']):
             simpleName = parse_gmail_mkm.simplify_card_name(card['cardName'])
             if simpleName in listOfSomeone:
                 if listOfSomeone[simpleName] <= card['cardQuantity']:
@@ -55,7 +55,7 @@ def find_shipping_by_list(shipments, listOfSomeone, listOwner=""):
         if foundCardsCostThisShipm:
             involvedShipments.update({shipID:foundCardsCostThisShipm})
             for idxCardToRemove in sorted(idxsCardToRemove, reverse=True):
-                del shipments[shipID]['cardOrdersCurrShipm'][idxCardToRemove]
+                del shipments[shipID]['cardOrders'][idxCardToRemove]
     return shipments, involvedShipments
 
 def total_cost_by_list(shipmentsDetails, involvedShipments, listOwner=""):
@@ -114,8 +114,8 @@ if __name__=="__main__":
     print("\nThe previous list should be equal to the following:")
     spareCardsCost = 0
     for shipID, shipDetails in shipmentsDetails.items():
-        if shipDetails['cardOrdersCurrShipm']:
-            for card in shipDetails['cardOrdersCurrShipm']:
+        if shipDetails['cardOrders']:
+            for card in shipDetails['cardOrders']:
                 print(f"{card['cardQuantity']} {card['cardName']} in shipment {shipID} (seller {shipDetails['sellerName']} is not in any list!")
                 spareCardsCost += round(card['cardCost']*float(card['cardQuantity']), 2)
     print(f"\nTotal cost of spare cards (without shipping): {spareCardsCost}")
