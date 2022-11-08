@@ -35,11 +35,11 @@ def list_clean(cardList):
         del cardList[keyToDelete]
     return cardList
 
-def find_shipping_by_list(shipments, listOfSomeone, listOwner=""):
+def find_shipping_by_list(shipmentsDetails, listOfSomeone, listOwner=""):
     if listOwner:
-        print(f"Checking list of {listOwner}")
+        print(f"Checking involved shipments of {listOwner}...")
     involvedShipments = {}
-    for shipID, shipDetails in shipments.items():
+    for shipID, shipDetails in shipmentsDetails.items():
         foundCardsCostThisShipm = []
         idxsCardToRemove = []
         for idx, card in enumerate(shipDetails['cardOrders']):
@@ -55,8 +55,8 @@ def find_shipping_by_list(shipments, listOfSomeone, listOwner=""):
         if foundCardsCostThisShipm:
             involvedShipments.update({shipID:foundCardsCostThisShipm})
             for idxCardToRemove in sorted(idxsCardToRemove, reverse=True):
-                del shipments[shipID]['cardOrders'][idxCardToRemove]
-    return shipments, involvedShipments
+                del shipmentsDetails[shipID]['cardOrders'][idxCardToRemove]
+    return involvedShipments
 
 def total_cost_by_list(shipmentsDetails, involvedShipments, listOwner=""):
     if listOwner:
@@ -109,9 +109,9 @@ if __name__=="__main__":
         print(f"{cardQuantity} {cardName}")
     print("(The previous cards were not in the card lists but in the input card list)")
     
-    shipmentsDetails, involvedGab = find_shipping_by_list(shipmentsDetails, listGab)
-    shipmentsDetails, involvedFed = find_shipping_by_list(shipmentsDetails, listFed)
-    shipmentsDetails, involvedAng = find_shipping_by_list(shipmentsDetails, listAng)
+    involvedGab = find_shipping_by_list(shipmentsDetails, listGab, "Gabriele")
+    involvedFed = find_shipping_by_list(shipmentsDetails, listFed, "Federico")
+    involvedAng = find_shipping_by_list(shipmentsDetails, listAng, "Angelo")
     print("\nThe previous list should be equal to the following:")
     spareCardsCost = 0
     for shipID, shipDetails in shipmentsDetails.items():
@@ -124,7 +124,7 @@ if __name__=="__main__":
     totCostGab = total_cost_by_list(shipmentsDetails, involvedGab, "Gabriele")
     totCostFed = total_cost_by_list(shipmentsDetails, involvedFed, "Federico")
     totCostAng = total_cost_by_list(shipmentsDetails, involvedAng, "Angelo")
-    shipmentsDetails, involvedSpareCards = find_shipping_by_list(shipmentsDetails, simpleCardsList)
+    involvedSpareCards = find_shipping_by_list(shipmentsDetails, simpleCardsList)
     totCostSpareCards = total_cost_by_list(shipmentsDetails, involvedSpareCards, "spare cards")
     totCost = round(totCostGab+totCostFed+totCostAng+totCostSpareCards, 2)
     assert abs(totCost - costs['totalCost']) < 0.01, \
