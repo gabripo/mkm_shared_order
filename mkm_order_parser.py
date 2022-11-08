@@ -141,7 +141,8 @@ if __name__=="__main__":
                 numSpareCards = card['cardQuantity']
                 spareCardsQuantity += numSpareCards
                 print(f"{numSpareCards} {card['cardName']} in shipment {shipID} (seller {shipDetails['sellerName']} is not in any list!")
-    del card, shipID, shipDetails, numSpareCards
+            del card, numSpareCards
+    del shipID, shipDetails
     assert sum(simpleCardsList.values()) == spareCardsQuantity, \
         "Number of spare cards does not match!"
     del spareCardsQuantity
