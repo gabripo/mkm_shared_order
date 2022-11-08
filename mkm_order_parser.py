@@ -119,6 +119,7 @@ if __name__=="__main__":
     print_list(notFound)
     print(f"\nNumber of cards NOT found: {sum(notFound.values())}")
     print(f"Number of different cards NOT found: {len(notFound)}")
+    del notFound
     
     print("\nSpare cards in the input card list, if missing removed:")
     print_list(simpleCardsList)
@@ -135,8 +136,10 @@ if __name__=="__main__":
                 numSpareCards = card['cardQuantity']
                 spareCardsQuantity += numSpareCards
                 print(f"{numSpareCards} {card['cardName']} in shipment {shipID} (seller {shipDetails['sellerName']} is not in any list!")
+    del card, shipID, shipDetails, numSpareCards
     assert sum(simpleCardsList.values()) == spareCardsQuantity, \
         "Number of spare cards does not match!"
+    del spareCardsQuantity
                 
     totCostGab = total_cost_by_list(shipmentsDetails, involvedGab, "Gabriele")
     totCostFed = total_cost_by_list(shipmentsDetails, involvedFed, "Federico")
@@ -146,6 +149,7 @@ if __name__=="__main__":
         "Some shipments have not been processed - shipment details not empty!"
     assert len(simpleCardsList) == 0, \
         "Some shipments have not been processed - resulting cards list not empty!"
+    del simpleCardsList
     
     totCostSpareCards = total_cost_by_list(shipmentsDetails, involvedSpareCards, "spare cards")
     totCost = round(totCostGab+totCostFed+totCostAng+totCostSpareCards, 2)
