@@ -37,7 +37,6 @@ Shipment 1092790167 - Bowman
 Shipment 1092790184 - Marsen
 Shipment 1092790168 - Enki13
 Shipment 1092790174 - Brisk
-Shipment 1092790160 - Wisdom4thewin
 Shipment 1092790191 - Eloheem
 Shipment 1092797738 - Marineris
 Shipment 1092790128 - sebseb5
@@ -55,7 +54,6 @@ Shipment 1092790163 - Paradise-Cards-FR
 Shipment 1092790170 - Thorbias
 Shipment 1092790182 - flipego
 Shipment 1092790202 - Bisasalz
-Shipment 1092790166 - NargomTV
 Shipment 1092790195 - Resfox
 Shipment 1092790146 - Cards-and-Trust
 Shipment 1092790180 - Daniel-Bri
@@ -65,11 +63,11 @@ Shipment 1092790162 - Oldschool1507
 Shipment 1092790178 - coburn2716
 
 
-Number of shipments: 59
-Merchandise value: 419,06 EUR
-Shipping costs: 170,30 EUR
+Number of shipments: 57
+Merchandise value: 418,46 EUR
+Shipping costs: 165,85 EUR
 Fees: 2,06 EUR
-Total cost: 591,42 EUR
+Total cost: 586,37 EUR
 
 (Shipment details see below)
 
@@ -729,22 +727,6 @@ Total 10,80 EUR
 
 --------------------------------------------------------------------------
 --------------------------------------------------------------------------
-Shipment 1092790160
-Seller: Wisdom4thewin
-Buyer: gabripo
-Shipment price: 2,70 EUR
-
-Contents:
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-2x Citadel Gate (Commander Legends: Battle for Baldur's Gate) - C -... 0,10 EUR
-Shipping 2,50 EUR
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Total 2,70 EUR
-
-
---------------------------------------------------------------------------
---------------------------------------------------------------------------
 Shipment 1092790191
 Seller: Eloheem
 Buyer: gabripo
@@ -1033,22 +1015,6 @@ Contents:
 Shipping 1,15 EUR
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Total 4,12 EUR
-
-
---------------------------------------------------------------------------
---------------------------------------------------------------------------
-Shipment 1092790166
-Seller: NargomTV
-Buyer: gabripo
-Shipment price: 2,35 EUR
-
-Contents:
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-2x Citadel Gate (Commander Legends: Battle for Baldur's Gate) - C -... 0,20 EUR
-Shipping 1,95 EUR
-++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Total 2,35 EUR
 
 
 --------------------------------------------------------------------------
