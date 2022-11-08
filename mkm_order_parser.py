@@ -4,7 +4,7 @@
 import read_cards
 import parse_gmail_mkm
 
-def list_check(cardList, listToRemove, listOwner="", notFound={}):
+def list_check(cardList, listToRemove, listOwner=""):
     if listOwner:
         print(f"\nChecking list of {listOwner}...")
     for cardName, cardQuantity in listToRemove.items():
@@ -27,7 +27,7 @@ def list_check(cardList, listToRemove, listOwner="", notFound={}):
             else:
                 notFound.update({cardName:cardQuantity})
     cardList = list_clean(cardList)
-    return cardList, notFound
+    return
 
 def list_clean(cardList):
     invalidKeys = [key for key, val in cardList.items() if int(val) == 0]
@@ -88,15 +88,16 @@ if __name__=="__main__":
     print(f"\nNumber of different cards in list: {len(simpleCardsList)}")
     print(f"Number of cards in list: {sum(simpleCardsList.values())}")
     
+    notFound = {}
     listGabFile = 'mkm_order_1_gabriele.txt'
     listGab = read_cards.read_card_list(listGabFile)
-    simpleCardsList, notFound = list_check(simpleCardsList, listGab, "Gabriele")
+    list_check(simpleCardsList, listGab, "Gabriele")
     listFedFile = 'mkm_order_1_federico.txt'
     listFed = read_cards.read_card_list(listFedFile)
-    simpleCardsList, notFound = list_check(simpleCardsList, listFed, "Federico", notFound)
+    list_check(simpleCardsList, listFed, "Federico")
     listAngFile = 'mkm_order_1_angelo.txt'
     listAng = read_cards.read_card_list(listAngFile)
-    simpleCardsList, notFound = list_check(simpleCardsList, listAng, "Angelo", notFound)
+    list_check(simpleCardsList, listAng, "Angelo")
     print("\nThe following cards were NOT found in the input card list:")
     for cardName, cardQuantity in notFound.items():
         print(f"{cardQuantity} {cardName}")
