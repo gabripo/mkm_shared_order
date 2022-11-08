@@ -93,7 +93,7 @@ def total_cost_by_list(shipmentsDetails, involvedShipments, listOwner=""):
             costCardInOrder = cardDetails[1]
             totCostCardInOrder = shareCostCardInOrder + costCardInOrder
             print(f"{numCardInOrder} {cardName} ({costCardInOrder} cards + {shareCostCardInOrder} shipping = {totCostCardInOrder}) for order {shipID} - seller {shipmentsDetails[shipID]['sellerName']}")
-        print(f"==> {involvedCostThisShipm} shipping + {costCardsInOrder} cards ({shipmentsDetails[shipID]['fee']} fee) = {shipmentData['totalCost']}")
+        print(f"= TOT: {involvedCostThisShipm} shipping + {costCardsInOrder} cards ({shipmentsDetails[shipID]['fee']} fee) = {shipmentData['totalCost']}")
         ordersCost.update({shipID:shipmentData})
     totalCostCards = round(sum([cost['costCardsInOrder'] for cost in ordersCost.values()]), 2)
     print(f"Total cost of cards: {totalCostCards}")
