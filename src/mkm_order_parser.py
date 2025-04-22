@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import read_cards
-import parse_gmail_mkm
+from src.read_cards import read_card_list
+from src.parse_gmail_mkm import simplify_card_name, parse_mail_txt
 
-def list_check(cardList, listToRemove, listOwner=""):
+def list_check(cardList, listToRemove, listOwner="", notFound = {}):
     if listOwner:
         print(f"\nChecking list of {listOwner}...")
     for cardName, cardQuantity in listToRemove.items():
@@ -47,7 +47,7 @@ def find_shipping_by_list(shipmentsDetails, listOfSomeone, listOwner=""):
     for shipID, shipDetails in shipmentsDetails.items():
         foundCardsCostThisShipm = {}
         for idx, card in enumerate(shipDetails['cardOrders']):
-            simpleName = parse_gmail_mkm.simplify_card_name(card['cardName'])
+            simpleName = simplify_card_name(card['cardName'])
             cardsInOrder = card['cardQuantity']
             if simpleName in listOfSomeone:
                 if listOfSomeone[simpleName] <= cardsInOrder:
@@ -106,20 +106,20 @@ def total_cost_by_list(shipmentsDetails, involvedShipments, listOwner=""):
 if __name__=="__main__":
     mkmMail = 'order_gmail.txt'
     shipmentsDetails, costs, cardsList, simpleCardsList = \
-        parse_gmail_mkm.parse_mail_txt(mkmMail)
+        parse_mail_txt(mkmMail)
     print(f"\nNumber of different cards in list: {len(simpleCardsList)}")
     print(f"Number of cards in list: {sum(simpleCardsList.values())}")
     
     notFound = {}
     listGabFile = 'mkm_order_1_gabriele.txt'
-    listGab = read_cards.read_card_list(listGabFile)
-    list_check(simpleCardsList, listGab, "Gabriele")
+    listGab = read_card_list(listGabFile)
+    list_check(simpleCardsList, listGab, "Gabriele", notFound)
     listFedFile = 'mkm_order_1_federico.txt'
-    listFed = read_cards.read_card_list(listFedFile)
-    list_check(simpleCardsList, listFed, "Federico")
+    listFed = read_card_list(listFedFile)
+    list_check(simpleCardsList, listFed, "Federico", notFound)
     listAngFile = 'mkm_order_1_angelo.txt'
-    listAng = read_cards.read_card_list(listAngFile)
-    list_check(simpleCardsList, listAng, "Angelo")
+    listAng = read_card_list(listAngFile)
+    list_check(simpleCardsList, listAng, "Angelo", notFound)
     print("\nThe following cards were NOT found in the input card list:")
     print_list(notFound)
     print(f"\nNumber of cards NOT found: {sum(notFound.values())}")
