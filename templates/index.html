@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email and Text Fields</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+    <h1>Magiccardmarket bill splitter</h1>
+    <form id="mainForm">
+        <div>
+            <label for="emailContent">Email Content:</label><br>
+            <textarea id="emailContent" name="emailContent" rows="10" cols="50"
+                placeholder="Paste your email content from Magiccardmarket here"></textarea>
+        </div>
+        <div id="textFieldsContainer">
+            <div class="text-fields-container">
+                <label for="textField1">Cards for the buyer 1:</label><br>
+                <textarea id="textField1" name="textField1" rows="4" cols="50"
+                    placeholder="Enter the cards for the buyer 1 here"></textarea>
+            </div>
+        </div>
+        <button type="button" class="add-button" onclick="addTextField()">Add buyer</button>
+        <button type="button" class="save-button" onclick="saveFields()">Save</button>
+    </form>
+
+    <script>
+        let numBuyers = 1;
+
+        function addTextField() {
+            numBuyers++;
+            const container = document.getElementById('textFieldsContainer');
+            const newField = document.createElement('div');
+            newField.className = 'text-fields-container';
+            newField.innerHTML = `
+                <label for="textField${numBuyers}">Cards for the buyer ${numBuyers}:</label><br>
+                <textarea id="textField${numBuyers}" rows="4" cols="50" name="textField${numBuyers}" placeholder="Enter the cards for the buyer ${numBuyers} here"></textarea>
+            `;
+            container.appendChild(newField);
+        }
+
+        async function saveFields() {
+            const emailContent = document.getElementById('emailContent').value;
+
+            const textFields = document.querySelectorAll('#textFieldsContainer input');
+            const fieldsData = Array.from(textFields).map((field, index) => ({
+                buyer: `Buyer ${index + 1}`,
+                content: field.value
+            }));
+
+            const dataToWrite = {
+                emailContent: emailContent,
+                buyers: fieldsData
+            };
+
+            try {
+                const response = await fetch('/save_fields', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dataToWrite)
+                });
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('Data saved successfully:', result);
+                    alert('Data saved successfully!');
+                } else {
+                    console.error('Error saving data:', response.statusText);
+                    alert('Error saving data. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error saving fields:', error);
+                alert('Error saving data. Please try again.');
+            }
+        }
+    </script>
+</body>
+
+</html>
