@@ -1,6 +1,7 @@
 import os
 import shutil
 from flask import Flask, render_template, request, jsonify
+from src.parse_gmail_mkm import parse_mail_txt
 
 txt_folder = os.path.join(os.getcwd(), 'txt_files')
 if os.path.exists(txt_folder):
@@ -41,6 +42,22 @@ def save_fields():
         return jsonify({'message': 'Fields saved successfully!'}), 200
     except Exception as e:
         return jsonify({'message': f'Error writing to file: {str(e)}'}), 500
+    
+@app.route('/analyze_email', methods=['POST'])
+def analyze_email():
+    email_content_txt_file = os.path.join(txt_folder, 'email_content.txt')
+    if not os.path.exists(email_content_txt_file):
+        return jsonify({'message': 'Email content file not found'}), 500
+    
+    shipment_details, costs, cards_list, simple_cards_list = \
+        parse_mail_txt(email_content_txt_file)
+    print(f"Content of e-mail in {email_content_txt_file} analyzed")
+    return jsonify({
+        'shipmentDetails': shipment_details,
+        'costs': costs,
+        'cardsList': cards_list,
+        'simpleCardsList': simple_cards_list
+    }), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

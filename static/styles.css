@@ -77,3 +77,23 @@ body {
     background-color: #1e7e34;
     transform: scale(1);
 }
+
+.email-info-field {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.email-info-field:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transform: scale(1.02);
+}

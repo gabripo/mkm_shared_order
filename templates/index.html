@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Email and Text Fields</title>
+    <title>Magiccardmarket bill splitter</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
@@ -16,6 +16,7 @@
             <textarea id="emailContent" name="emailContent" rows="10" cols="50"
                 placeholder="Paste your email content from Magiccardmarket here"></textarea>
         </div>
+        <button type="button" class="analyze-email-button" onclick="analyzeEmailField()">Analyze Email</button>
         <div id="textFieldsContainer">
             <div class="text-fields-container">
                 <label for="textField1">Cards for the buyer 1:</label><br>
@@ -25,6 +26,14 @@
         </div>
         <button type="button" class="add-button" onclick="addTextField()">Add buyer</button>
         <button type="button" class="save-button" onclick="saveFields()">Save</button>
+        <br>
+        <div id="visualizationContainer" style="margin-left: 20px; display: none; vertical-align: top;">
+            <!-- data will be dynamically inserted here -->
+            <div id="shipmentDetailsDiv" class="email-info-field"></div>
+            <div id="costsDiv" class="email-info-field"></div>
+            <div id="cardsListDiv" class="email-info-field"></div>
+            <div id="simpleCardsListDiv" class="email-info-field"></div>
+        </div>
     </form>
 
     <script>
@@ -67,7 +76,6 @@
                 if (response.ok) {
                     const result = await response.json();
                     console.log('Data saved successfully:', result);
-                    alert('Data saved successfully!');
                 } else {
                     console.error('Error saving data:', response.statusText);
                     alert('Error saving data. Please try again.');
@@ -75,6 +83,79 @@
             } catch (error) {
                 console.error('Error saving fields:', error);
                 alert('Error saving data. Please try again.');
+            }
+        }
+
+        async function analyzeEmailField() {
+            await saveFields();
+            try {
+                const response = await fetch('/analyze_email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ emailContent: document.getElementById('emailContent').value })
+                });
+                if (response.ok) {
+                    const result = await response.json();
+                    console.log('Email analyzed successfully:', result);
+                    updateEmailContentInfo(
+                        result.shipmentDetails,
+                        result.costs,
+                        result.cardsList,
+                        result.simpleCardsList,
+                    );
+                } else {
+                    console.error('Error analyzing email:', response.statusText);
+                    alert('Error analyzing the e-mail. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error analyzing the e-mail:', error);
+                alert('Error analyzing the e-mail. Please try again.');
+            }
+        }
+
+        function updateEmailContentInfo(shipmentDetails, costs, cardsList, simpleCardsList) {
+            const visualizationContainer = document.getElementById('visualizationContainer');
+            const shipmentDetailsDiv = document.getElementById('shipmentDetailsDiv');
+            const costsDiv = document.getElementById('costsDiv');
+            const cardsListDiv = document.getElementById('cardsListDiv');
+            const simpleCardsListDiv = document.getElementById('simpleCardsListDiv');
+
+            let hasContent = false;
+
+            if (Object.keys(shipmentDetails).length > 0) {
+                shipmentDetailsDiv.innerHTML = `<h3>Shipment Details:</h3><pre>${JSON.stringify(shipmentDetails, null, 2)}</pre>`;
+                hasContent = true;
+            } else {
+                shipmentDetailsDiv.innerHTML = '';
+            }
+
+            if (Object.keys(costs).length > 0) {
+                costsDiv.innerHTML = `<h3>Costs:</h3><pre>${JSON.stringify(costs, null, 2)}</pre>`;
+                hasContent = true;
+            } else {
+                costsDiv.innerHTML = '';
+            }
+
+            if (Object.keys(cardsList).length > 0) {
+                cardsListDiv.innerHTML = `<h3>Cards List:</h3><pre>${JSON.stringify(cardsList, null, 2)}</pre>`;
+                hasContent = true;
+            } else {
+                cardsListDiv.innerHTML = '';
+            }
+
+            if (Object.keys(simpleCardsList).length > 0) {
+                simpleCardsListDiv.innerHTML = `<h3>Simple Cards List:</h3><pre>${JSON.stringify(simpleCardsList, null, 2)}</pre>`;
+                hasContent = true;
+            } else {
+                simpleCardsListDiv.innerHTML = '';
+            }
+
+            if (hasContent) {
+                visualizationContainer.style.display = 'block';
+            } else {
+                visualizationContainer.style.display = 'none';
             }
         }
     </script>
