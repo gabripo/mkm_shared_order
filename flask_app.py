@@ -9,6 +9,8 @@ if os.path.exists(txt_folder):
 os.makedirs(txt_folder)
 print(f"Folder where the txt files will be stored: {txt_folder}")
 
+email_content_txt_file = os.path.join(txt_folder, 'email_content.txt')
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -28,8 +30,7 @@ def save_fields():
     buyers_data = data['buyers']
 
     try:
-        email_txt_file = os.path.join(txt_folder, 'email_content.txt')
-        with open(email_txt_file, 'w') as f:
+        with open(email_content_txt_file, 'w') as f:
             f.write(email_content)
         
         for buyer_data in buyers_data:
@@ -45,7 +46,6 @@ def save_fields():
     
 @app.route('/analyze_email', methods=['POST'])
 def analyze_email():
-    email_content_txt_file = os.path.join(txt_folder, 'email_content.txt')
     if not os.path.exists(email_content_txt_file):
         return jsonify({'message': 'Email content file not found'}), 500
     
