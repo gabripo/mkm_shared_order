@@ -1,16 +1,35 @@
 import os
 import shutil
-from flask import Flask, render_template, request, jsonify
+import uuid
+import tempfile
+from flask import Flask, render_template, request, jsonify, session
 from src.mkm_order_parser import find_shipping_by_list, list_check, total_cost_by_list
 from src.read_cards import read_card_list
 from src.parse_gmail_mkm import parse_mail_txt
 
-txt_folder = os.path.join(os.getcwd(), 'txt_files')
-if os.path.exists(txt_folder):
-    shutil.rmtree(txt_folder)
-os.makedirs(txt_folder)
-print(f"Folder where the txt files will be stored: {txt_folder}")
+def determine_flask_session_id():
+    session_id = session.get('session_id')
+    if not session_id:
+        session_id = str(uuid.uuid4())
+        session['session_id'] = session_id
+    return session_id
 
+def determine_output_folder() -> str:
+    if os.getenv("APP_IN_DOCKER") == "Yes":
+        print("DOCKER EXECUTION DETECTED")
+        session_id = determine_flask_session_id()
+        output_dir = os.path.join(tempfile.gettempdir(), session_id)
+        print(f"Txt files directory for session id {session_id} set as: {output_dir}")
+    else:
+        output_dir = os.path.abspath(os.path.join(os.getcwd(), 'txt_files'))
+        print(f"Txt files directory set as: {output_dir}")
+
+    if os.path.exists(output_dir):
+        shutil.rmtree(output_dir)
+    os.makedirs(output_dir)
+    return output_dir
+
+txt_folder = determine_output_folder()
 email_content_txt_file = os.path.join(txt_folder, 'email_content.txt')
 
 app = Flask(__name__)
