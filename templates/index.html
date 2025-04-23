@@ -25,6 +25,7 @@
             </div>
         </div>
         <button type="button" class="add-button" onclick="addTextField()">Add buyer</button>
+        <button type="button" class="reset-button" onclick="clearFields()">Reset</button>
         <button type="button" class="save-button" onclick="saveFields()">Save</button>
         <br>
         <div id="visualizationContainer" style="margin-left: 20px; display: none; vertical-align: top;">
@@ -157,6 +158,13 @@
             } else {
                 visualizationContainer.style.display = 'none';
             }
+        }
+
+        function clearFields() {
+            document.getElementById('emailContent').value = '';
+            const textFields = document.querySelectorAll('#textFieldsContainer textarea');
+            textFields.forEach(field => field.value = '');
+            document.getElementById('visualizationContainer').style.display = 'none';
         }
     </script>
 </body>
