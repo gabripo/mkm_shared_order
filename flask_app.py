@@ -1,6 +1,8 @@
 import os
 import shutil
 from flask import Flask, render_template, request, jsonify
+from src.mkm_order_parser import list_check
+from src.read_cards import read_card_list
 from src.parse_gmail_mkm import parse_mail_txt
 
 txt_folder = os.path.join(os.getcwd(), 'txt_files')
@@ -58,6 +60,28 @@ def analyze_email():
         'cardsList': cards_list,
         'simpleCardsList': simple_cards_list
     }), 200
+
+@app.route('/analyze_buyers', methods=['POST'])
+def analyze_buyers():
+    if not os.path.exists(txt_folder):
+        return jsonify({'message': 'Buyers folder not found'}), 500
+    
+    data = request.json
+    if not 'simpleCardsList' in data.keys():
+        return jsonify({'message': 'Missing simple cards list'}), 500
+    simple_cards_list = data['simpleCardsList']
+
+    notFound = {}
+    for filename in os.listdir(txt_folder):
+        if filename.endswith('.txt') and filename != os.path.basename(email_content_txt_file):
+            buyer_name = filename[:-4]
+            buyer_txt_file = os.path.join(txt_folder, filename)
+            buyer_list = read_card_list(buyer_txt_file)
+            list_check(simple_cards_list, buyer_list, buyer_name, notFound)
+    
+    return jsonify({
+        'notFoundCards': notFound,
+        }), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
