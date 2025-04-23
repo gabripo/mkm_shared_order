@@ -28,6 +28,7 @@
             </div>
         </div>
         <button type="button" class="add-button" onclick="addTextField()">Add buyer</button>
+        <button type="button" class="remove-button" onclick="removeTextField()">Remove buyer</button>
         <button type="button" class="analyze-button" onclick="analyzeBuyersFields()">Analyze Buyers</button>
         <button type="button" class="reset-button" onclick="clearFields()">Reset</button>
         <!-- <button type="button" class="save-button" onclick="saveFields()">Save</button> -->
@@ -61,6 +62,14 @@
                 <textarea id="textField${numBuyers}" rows="4" cols="50" name="textField${numBuyers}" placeholder="Enter the cards for the buyer ${numBuyers} here"></textarea>
             `;
             container.appendChild(newField);
+        }
+
+        function removeTextField() {
+            if (numBuyers > 1) {
+                const container = document.getElementById('textFieldsContainer');
+                container.removeChild(container.lastChild);
+                numBuyers--;
+            }
         }
 
         async function saveFields() {
