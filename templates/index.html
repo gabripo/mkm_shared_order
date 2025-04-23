@@ -208,10 +208,12 @@
 
         function updateNotFoundInfo(notFoundCards) {
             const notFoundCardsJs = JSON.stringify(notFoundCards, null, 2)
+            const numDifferentCards = Object.keys(notFoundCards).length
+            const numNotFoundCards = Object.values(notFoundCards).reduce((acc, val) => acc + val, 0)
             const notFoundDiv = document.getElementById('notFoundCardsDiv');
             if (Object.keys(notFoundCards).length > 0) {
                 notFoundDiv.innerHTML = `
-                <h3>Not Found Cards:</h3>
+                <h3>Not Found Cards - ${numDifferentCards} different cards, ${numNotFoundCards} in total:</h3>
                 <pre>${notFoundCardsJs}</pre>
                 `;
             } else {
