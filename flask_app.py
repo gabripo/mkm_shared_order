@@ -97,27 +97,32 @@ def analyze_buyers():
     total_cost_from_email = data['totalCosts']['totalCost']
     if not 'buyers' in data.keys():
         return jsonify({'message': 'Missing buyers'}), 500
-    buyers_names = {buyer_data['buyer'] for buyer_data in data['buyers']}
+    buyers_names = [buyer_data['buyer'] for buyer_data in data['buyers']]
+
+    buyers_txt_files = [
+        filename
+        for filename in os.listdir(txt_folder)
+        if filename.endswith('.txt')
+        and
+        filename != os.path.basename(email_content_txt_file)
+        and
+        filename[:-4] in set(buyers_names) # remove the .txt extension with the :-4
+    ]
+    buyers_txt_files.sort(key=lambda name: buyers_names.index(name[:-4])) # preserve the same order of the buyers in the input form
+    buyers_txt_files[:] = [os.path.join(txt_folder, filename) for filename in buyers_txt_files] # add absolute path to the file names
 
     not_found_cards = {}
     cards_per_buyer = {}
     costs_per_buyer = {}
-    for filename in os.listdir(txt_folder):
-        if filename.endswith('.txt') and filename != os.path.basename(email_content_txt_file):
-            buyer_name = filename[:-4]
-            buyer_txt_file = os.path.join(txt_folder, filename)
-            if buyer_name not in buyers_names:
-                print(f"Buyer {buyer_name} not in the list of buyers, even if file {buyer_txt_file} available (maybe an unexpected file?), skipping...")
-                continue
+    for buyer_name, buyer_txt_file in zip(buyers_names, buyers_txt_files):
+        buyer_list = read_card_list(buyer_txt_file)
+        simple_cards_list = list_check(simple_cards_list, buyer_list, buyer_name, not_found_cards)
 
-            buyer_list = read_card_list(buyer_txt_file)
-            simple_cards_list = list_check(simple_cards_list, buyer_list, buyer_name, not_found_cards)
+        involved_cards = find_shipping_by_list(shipment_details, buyer_list, buyer_name)
+        cards_per_buyer[buyer_name] = involved_cards
 
-            involved_cards = find_shipping_by_list(shipment_details, buyer_list, buyer_name)
-            cards_per_buyer[buyer_name] = involved_cards
-
-            involved_costs = total_cost_by_list(shipment_details, involved_cards, buyer_name)
-            costs_per_buyer[buyer_name] = involved_costs
+        involved_costs = total_cost_by_list(shipment_details, involved_cards, buyer_name)
+        costs_per_buyer[buyer_name] = involved_costs
     
     spare_cards = find_shipping_by_list(shipment_details, simple_cards_list) # simple_cards_list is reduced after each iteration, here the remaining cards are the spare ones
     if spare_cards:
