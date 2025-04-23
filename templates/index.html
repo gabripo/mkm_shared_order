@@ -56,11 +56,7 @@
             const emailContent = document.getElementById('emailContent').value;
 
             const textFields = document.querySelectorAll('#textFieldsContainer textarea');
-            const fieldsData = Array.from(textFields).map((field, index) => ({
-                buyer: `Buyer ${index + 1}`,
-                content: field.value
-            }));
-
+            const fieldsData = getBuyerFields();
             const dataToWrite = {
                 emailContent: emailContent,
                 buyers: fieldsData
@@ -178,12 +174,15 @@
             }
         }
 
-        function analyzeBuyerFields() {
+        function getBuyerFields() {
             const textFields = document.querySelectorAll('#textFieldsContainer textarea');
-            const fieldsData = Array.from(textFields).map((field, index) => ({
-                buyer: `Buyer ${index + 1}`,
-                content: field.value
-            }));
+
+            const fieldsData = Array.from(textFields)
+                .filter(field => field.value.trim() !== '')
+                .map((field, index) => ({
+                    buyer: `Buyer ${index + 1}`,
+                    content: field.value
+                }));
 
             return fieldsData;
         }
