@@ -1,7 +1,7 @@
 import os
 import shutil
 from flask import Flask, render_template, request, jsonify
-from src.mkm_order_parser import list_check
+from src.mkm_order_parser import find_shipping_by_list, list_check, total_cost_by_list
 from src.read_cards import read_card_list
 from src.parse_gmail_mkm import parse_mail_txt
 
@@ -70,17 +70,33 @@ def analyze_buyers():
     if not 'simpleCardsList' in data.keys():
         return jsonify({'message': 'Missing simple cards list'}), 500
     simple_cards_list = data['simpleCardsList']
+    if not 'shipmentDetails' in data.keys():
+        return jsonify({'message': 'Missing shipment details'}), 500
+    shipment_details = data['shipmentDetails']
 
-    notFound = {}
+    not_found_cards = {}
+    cards_per_buyer = {}
+    costs_per_buyer = {}
     for filename in os.listdir(txt_folder):
         if filename.endswith('.txt') and filename != os.path.basename(email_content_txt_file):
             buyer_name = filename[:-4]
             buyer_txt_file = os.path.join(txt_folder, filename)
             buyer_list = read_card_list(buyer_txt_file)
-            list_check(simple_cards_list, buyer_list, buyer_name, notFound)
+            list_check(simple_cards_list, buyer_list, buyer_name, not_found_cards)
+
+            involved_cards = find_shipping_by_list(shipment_details, buyer_list, buyer_name)
+            cards_per_buyer[buyer_name] = involved_cards
+
+            involved_costs = total_cost_by_list(shipment_details, involved_cards, buyer_name)
+            costs_per_buyer[buyer_name] = involved_costs
+    
+    spare_cards = find_shipping_by_list(shipment_details, simple_cards_list) # simple_cards_list is reduced after each iteration, here the remaining cards are the spare ones
     
     return jsonify({
-        'notFoundCards': notFound,
+        'notFoundCards': not_found_cards,
+        'cardsPerBuyer': cards_per_buyer,
+        'costsPerBuyer': costs_per_buyer,
+        'spareCards': spare_cards,
         }), 200
 
 if __name__ == '__main__':

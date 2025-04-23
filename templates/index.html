@@ -189,7 +189,10 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ simpleCardsList: emailContent.simpleCardsList })
+                    body: JSON.stringify({
+                        simpleCardsList: emailContent.simpleCardsList,
+                        shipmentDetails: emailContent.shipmentDetails,
+                    })
                 });
                 if (response.ok) {
                     const result = await response.json();
