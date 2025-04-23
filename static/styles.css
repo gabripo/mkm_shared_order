@@ -35,7 +35,7 @@ body {
     color: #555;
 }
 
-.analyze-email-button {
+.analyze-button {
     margin-left: 10px;
     padding: 10px 15px;
     background-color: #007bff;
@@ -47,12 +47,12 @@ body {
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.analyze-email-button:hover {
+.analyze-button:hover {
     background-color: #0056b3;
     transform: scale(1.05);
 }
 
-.analyze-email-button:active {
+.analyze-button:active {
     background-color: #004085;
     transform: scale(1);
 }
