@@ -32,6 +32,7 @@
         <div id="visualizationContainer" style="margin-left: 20px; display: none; vertical-align: top;">
             <!-- data will be dynamically inserted here -->
             <div id="costsPerBuyerDiv" class="email-info-field"></div>
+            <div id="cardsPerBuyerDiv" class="email-info-field"></div>
             <div id="notFoundCardsDiv" class="email-info-field"></div>
             <div id="spareCardsDiv" class="email-info-field"></div>
             <div id="shipmentDetailsDiv" class="email-info-field"></div>
@@ -202,6 +203,7 @@
                     console.log('Buyers analyzed successfully:', result);
                     if (result.computationWasCorrect) {
                         updateCostsPerBuyer(result.costsPerBuyer);
+                        updateCardsPerBuyer(result.cardsPerBuyer);
                         updateNotFoundInfo(result.notFoundCards);
                         updateSpareInfo(result.spareCards);
                     } else {
@@ -228,6 +230,42 @@
                 `;
             } else {
                 costsPerBuyerDiv.innerHTML = '';
+            }
+        }
+
+        function updateCardsPerBuyer(cardsPerBuyer) {
+            const cardsPerBuyerDiv = document.getElementById('cardsPerBuyerDiv');
+            let content = '';
+
+            for (const [buyer, orders] of Object.entries(cardsPerBuyer)) {
+                let totalCards = 0;
+                let totalCost = 0;
+
+                const cardNames = [];
+                for (const [orderName, order] of Object.entries(orders)) {
+                    for (const [cardName, [amount, cost]] of Object.entries(order)) {
+                        totalCards += amount;
+                        totalCost += cost;
+                        cardNames.push(amount + ' ' + cardName);
+                    }
+                }
+                numDifferentCards = cardNames.length
+
+                content += `
+            <h3>${buyer}:</h3>
+            <p>Total Cost (without shipping): ${totalCost.toFixed(2)}</p>
+            <p>Cards - ${numDifferentCards} different, ${totalCards} in total:</p>
+            <pre>${cardNames.join('\n')}</pre>
+            `;
+            }
+
+            if (content) {
+                cardsPerBuyerDiv.innerHTML = `
+            <h3>Cards per buyer:</h3>
+            ${content}
+            `;
+            } else {
+                cardsPerBuyerDiv.innerHTML = '';
             }
         }
 
