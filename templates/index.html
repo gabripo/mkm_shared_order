@@ -19,9 +19,12 @@
         <button type="button" class="analyze-button" onclick="analyzeEmailField()">Analyze Email</button>
         <div id="textFieldsContainer">
             <div class="text-fields-container">
-                <label for="textField1">Cards for the buyer 1:</label><br>
+                <label for="buyerName1">Buyer 1 Name:</label><br>
+                <input type="text" id="buyerName1" name="buyerName1" placeholder="default: Buyer 1">
+                <br>
+                <label for="textField1">Cards for the buyer:</label><br>
                 <textarea id="textField1" name="textField1" rows="4" cols="50"
-                    placeholder="Enter the cards for the buyer 1 here"></textarea>
+                    placeholder="Enter the cards for the buyer here"></textarea>
             </div>
         </div>
         <button type="button" class="add-button" onclick="addTextField()">Add buyer</button>
@@ -51,6 +54,9 @@
             const newField = document.createElement('div');
             newField.className = 'text-fields-container';
             newField.innerHTML = `
+                <label for="buyerName${numBuyers}">Buyer ${numBuyers} Name:</label><br>
+                <input type="text" id="buyerName${numBuyers}" name="buyerName${numBuyers}" placeholder="default: Buyer ${numBuyers}">
+                <br>
                 <label for="textField${numBuyers}">Cards for the buyer ${numBuyers}:</label><br>
                 <textarea id="textField${numBuyers}" rows="4" cols="50" name="textField${numBuyers}" placeholder="Enter the cards for the buyer ${numBuyers} here"></textarea>
             `;
@@ -252,7 +258,7 @@
                 numDifferentCards = cardNames.length
 
                 content += `
-            <h3>${buyer}:</h3>
+            <h3>Buyer ${buyer}:</h3>
             <p>Total Cost (without shipping): ${totalCost.toFixed(2)}</p>
             <p>Cards - ${numDifferentCards} different, ${totalCards} in total:</p>
             <pre>${cardNames.join('\n')}</pre>
@@ -300,13 +306,14 @@
 
         function getBuyerFields() {
             const textFields = document.querySelectorAll('#textFieldsContainer textarea');
+            const buyerNames = document.querySelectorAll('#textFieldsContainer input[type="text"]');
 
             const fieldsData = Array.from(textFields)
-                .filter(field => field.value.trim() !== '')
                 .map((field, index) => ({
-                    buyer: `Buyer ${index + 1}`,
+                    buyer: buyerNames[index]?.value || `Buyer ${index + 1}`,
                     content: field.value
-                }));
+                }))
+                .filter(field => field.content.trim() !== '');
 
             return fieldsData;
         }
