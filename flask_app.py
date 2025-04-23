@@ -95,6 +95,9 @@ def analyze_buyers():
     if not 'totalCosts' in data.keys() or not 'totalCost' in data['totalCosts']:
         return jsonify({'message': 'Missing total costs'}), 500
     total_cost_from_email = data['totalCosts']['totalCost']
+    if not 'buyers' in data.keys():
+        return jsonify({'message': 'Missing buyers'}), 500
+    buyers_names = {buyer_data['buyer'] for buyer_data in data['buyers']}
 
     not_found_cards = {}
     cards_per_buyer = {}
@@ -103,6 +106,10 @@ def analyze_buyers():
         if filename.endswith('.txt') and filename != os.path.basename(email_content_txt_file):
             buyer_name = filename[:-4]
             buyer_txt_file = os.path.join(txt_folder, filename)
+            if buyer_name not in buyers_names:
+                print(f"Buyer {buyer_name} not in the list of buyers, even if file {buyer_txt_file} available (maybe an unexpected file?), skipping...")
+                continue
+
             buyer_list = read_card_list(buyer_txt_file)
             list_check(simple_cards_list, buyer_list, buyer_name, not_found_cards)
 
@@ -113,9 +120,8 @@ def analyze_buyers():
             costs_per_buyer[buyer_name] = involved_costs
     
     spare_cards = find_shipping_by_list(shipment_details, simple_cards_list) # simple_cards_list is reduced after each iteration, here the remaining cards are the spare ones
-    costs_spare_cards = total_cost_by_list(shipment_details, spare_cards, "spare cards")
     if spare_cards:
-        costs_per_buyer["spare cards"] = costs_spare_cards
+        costs_per_buyer["spare cards"] =  total_cost_by_list(shipment_details, spare_cards, "spare cards")
 
     total_cost_computed = round(sum(costs_per_buyer.values()), 2) # spare cards are included in the total cost, if any
     if (total_cost_computed - total_cost_from_email) > 0.01:

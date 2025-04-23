@@ -192,6 +192,12 @@
                 alert('Please analyze the email content first.');
                 return;
             }
+            const buyerFields = getBuyerFields();
+            if (buyerFields.length === 0) {
+                alert('Please enter at least one buyer field.');
+                return;
+            }
+
             try {
                 const response = await fetch('/analyze_buyers', {
                     method: 'POST',
@@ -202,6 +208,7 @@
                         simpleCardsList: emailContent.simpleCardsList,
                         shipmentDetails: emailContent.shipmentDetails,
                         totalCosts: emailContent.costs,
+                        buyers: buyerFields,
                     })
                 });
                 if (response.ok) {
