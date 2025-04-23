@@ -31,6 +31,7 @@
         <br>
         <div id="visualizationContainer" style="margin-left: 20px; display: none; vertical-align: top;">
             <!-- data will be dynamically inserted here -->
+            <div id="costsPerBuyerDiv" class="email-info-field"></div>
             <div id="notFoundCardsDiv" class="email-info-field"></div>
             <div id="spareCardsDiv" class="email-info-field"></div>
             <div id="shipmentDetailsDiv" class="email-info-field"></div>
@@ -198,6 +199,7 @@
                 if (response.ok) {
                     const result = await response.json();
                     console.log('Buyers analyzed successfully:', result);
+                    updateCostsPerBuyer(result.costsPerBuyer);
                     updateNotFoundInfo(result.notFoundCards);
                     updateSpareInfo(result.spareCards);
                     return result;
@@ -208,6 +210,19 @@
             } catch (error) {
                 console.error('Error analyzing the buyers:', error);
                 alert('Error analyzing the buyers. Please try again.');
+            }
+        }
+
+        function updateCostsPerBuyer(costsPerBuyer) {
+            const costsPerBuyerJs = JSON.stringify(costsPerBuyer, null, 2);
+            const costsPerBuyerDiv = document.getElementById('costsPerBuyerDiv');
+            if (Object.keys(costsPerBuyer).length > 0) {
+                costsPerBuyerDiv.innerHTML = `
+                <h3>Costs per buyer:</h3>
+                <pre>${costsPerBuyerJs}</pre>
+                `;
+            } else {
+                costsPerBuyerDiv.innerHTML = '';
             }
         }
 
