@@ -129,18 +129,14 @@ def analyze_buyers():
         costs_per_buyer["spare cards"] =  total_cost_by_list(shipment_details, spare_cards, "spare cards")
 
     total_cost_computed = round(sum(costs_per_buyer.values()), 2) # spare cards are included in the total cost, if any
-    if (total_cost_computed - total_cost_from_email) > 0.01:
-        # we test if the whole process was correct here!
-        computation_was_correct = False
-    else:
-        computation_was_correct = True
+    computation_error = abs(total_cost_computed - total_cost_from_email)
     
     return jsonify({
         'notFoundCards': not_found_cards,
         'cardsPerBuyer': cards_per_buyer,
         'costsPerBuyer': costs_per_buyer,
         'spareCards': spare_cards,
-        'computationWasCorrect': computation_was_correct,
+        'computationError': computation_error,
         }), 200
 
 if __name__ == '__main__':
