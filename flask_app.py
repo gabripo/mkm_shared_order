@@ -73,6 +73,9 @@ def analyze_buyers():
     if not 'shipmentDetails' in data.keys():
         return jsonify({'message': 'Missing shipment details'}), 500
     shipment_details = data['shipmentDetails']
+    if not 'totalCosts' in data.keys() or not 'totalCost' in data['totalCosts']:
+        return jsonify({'message': 'Missing total costs'}), 500
+    total_cost_from_email = data['totalCosts']['totalCost']
 
     not_found_cards = {}
     cards_per_buyer = {}
@@ -91,12 +94,23 @@ def analyze_buyers():
             costs_per_buyer[buyer_name] = involved_costs
     
     spare_cards = find_shipping_by_list(shipment_details, simple_cards_list) # simple_cards_list is reduced after each iteration, here the remaining cards are the spare ones
+    costs_spare_cards = total_cost_by_list(shipment_details, spare_cards, "spare cards")
+    if spare_cards:
+        costs_per_buyer["spare cards"] = costs_spare_cards
+
+    total_cost_computed = round(sum(costs_per_buyer.values()), 2) # spare cards are included in the total cost, if any
+    if (total_cost_computed - total_cost_from_email) > 0.01:
+        # we test if the whole process was correct here!
+        computation_was_correct = False
+    else:
+        computation_was_correct = True
     
     return jsonify({
         'notFoundCards': not_found_cards,
         'cardsPerBuyer': cards_per_buyer,
         'costsPerBuyer': costs_per_buyer,
         'spareCards': spare_cards,
+        'computationWasCorrect': computation_was_correct,
         }), 200
 
 if __name__ == '__main__':
