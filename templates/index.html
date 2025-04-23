@@ -32,6 +32,7 @@
         <div id="visualizationContainer" style="margin-left: 20px; display: none; vertical-align: top;">
             <!-- data will be dynamically inserted here -->
             <div id="notFoundCardsDiv" class="email-info-field"></div>
+            <div id="spareCardsDiv" class="email-info-field"></div>
             <div id="shipmentDetailsDiv" class="email-info-field"></div>
             <div id="costsDiv" class="email-info-field"></div>
             <div id="cardsListDiv" class="email-info-field"></div>
@@ -198,9 +199,10 @@
                     const result = await response.json();
                     console.log('Buyers analyzed successfully:', result);
                     updateNotFoundInfo(result.notFoundCards);
+                    updateSpareInfo(result.spareCards);
                     return result;
                 } else {
-                    console.error('Error analyzing buyers:', response.statusText);
+                    console.error('Error analyzing the buyers in the backend:', response.statusText);
                     alert('Error analyzing the buyers. Please try again.');
                 }
             } catch (error) {
@@ -221,6 +223,20 @@
                 `;
             } else {
                 notFoundDiv.innerHTML = '';
+            }
+        }
+
+        function updateSpareInfo(spareCards) {
+            const spareCardsJs = JSON.stringify(spareCards, null, 2)
+            const numDifferentCards = Object.keys(spareCards).length
+            const spareCardsDiv = document.getElementById('spareCardsDiv');
+            if (Object.keys(spareCards).length > 0) {
+                spareCardsDiv.innerHTML = `
+                <h3>Spare Cards per order - ${numDifferentCards} different cards:</h3>
+                <pre>${spareCardsJs}</pre>
+                `;
+            } else {
+                spareCardsDiv.innerHTML = '';
             }
         }
 
