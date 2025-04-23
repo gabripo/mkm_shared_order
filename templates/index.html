@@ -55,7 +55,7 @@
         async function saveFields() {
             const emailContent = document.getElementById('emailContent').value;
 
-            const textFields = document.querySelectorAll('#textFieldsContainer input');
+            const textFields = document.querySelectorAll('#textFieldsContainer textarea');
             const fieldsData = Array.from(textFields).map((field, index) => ({
                 buyer: `Buyer ${index + 1}`,
                 content: field.value
@@ -176,6 +176,16 @@
             } else {
                 visualizationContainer.style.display = 'none';
             }
+        }
+
+        function analyzeBuyerFields() {
+            const textFields = document.querySelectorAll('#textFieldsContainer textarea');
+            const fieldsData = Array.from(textFields).map((field, index) => ({
+                buyer: `Buyer ${index + 1}`,
+                content: field.value
+            }));
+
+            return fieldsData;
         }
 
         function clearFields() {
