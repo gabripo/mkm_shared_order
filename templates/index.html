@@ -126,28 +126,46 @@
             let hasContent = false;
 
             if (Object.keys(shipmentDetails).length > 0) {
-                shipmentDetailsDiv.innerHTML = `<h3>Shipment Details:</h3><pre>${JSON.stringify(shipmentDetails, null, 2)}</pre>`;
+                shipmentDetailsJs = JSON.stringify(shipmentDetails, null, 2)
+                shipmentDetailsDiv.innerHTML = `
+                <h3>Shipment Details:</h3>
+                <pre>${shipmentDetailsJs}</pre>
+                `;
                 hasContent = true;
             } else {
                 shipmentDetailsDiv.innerHTML = '';
             }
 
             if (Object.keys(costs).length > 0) {
-                costsDiv.innerHTML = `<h3>Costs:</h3><pre>${JSON.stringify(costs, null, 2)}</pre>`;
+                costsJs = JSON.stringify(costs, null, 2)
+                costsDiv.innerHTML = `
+                <h3>Costs:</h3>
+                <pre>${costsJs}</pre>
+                `;
                 hasContent = true;
             } else {
                 costsDiv.innerHTML = '';
             }
 
             if (Object.keys(cardsList).length > 0) {
-                cardsListDiv.innerHTML = `<h3>Cards List:</h3><pre>${JSON.stringify(cardsList, null, 2)}</pre>`;
+                cardsListJs = JSON.stringify(cardsList, null, 2)
+                cardsListDiv.innerHTML = `
+                <h3>Cards List:</h3>
+                <pre>${cardsListJs}</pre>
+                `;
                 hasContent = true;
             } else {
                 cardsListDiv.innerHTML = '';
             }
 
             if (Object.keys(simpleCardsList).length > 0) {
-                simpleCardsListDiv.innerHTML = `<h3>Simple Cards List:</h3><pre>${JSON.stringify(simpleCardsList, null, 2)}</pre>`;
+                const numDifferentCards = Object.keys(simpleCardsList).length
+                const numTotalCards = Object.values(simpleCardsList).reduce((acc, val) => acc + val, 0)
+                const simpleCardsListJs = JSON.stringify(simpleCardsList, null, 2)
+                simpleCardsListDiv.innerHTML = `
+                <h3>Simple Cards List - ${numDifferentCards} different cards , ${numTotalCards} total cards:</h3>
+                <pre>${simpleCardsListJs}</pre>
+                `;
                 hasContent = true;
             } else {
                 simpleCardsListDiv.innerHTML = '';
