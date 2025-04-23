@@ -27,7 +27,7 @@ def list_check(cardList, listToRemove, listOwner="", notFound = {}):
             else:
                 notFound.update({cardName:cardQuantity})
     cardList = list_clean(cardList)
-    return
+    return cardList
 
 def list_clean(cardList):
     invalidKeys = [key for key, val in cardList.items() if int(val) == 0]

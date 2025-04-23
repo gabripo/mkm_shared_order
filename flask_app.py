@@ -111,7 +111,7 @@ def analyze_buyers():
                 continue
 
             buyer_list = read_card_list(buyer_txt_file)
-            list_check(simple_cards_list, buyer_list, buyer_name, not_found_cards)
+            simple_cards_list = list_check(simple_cards_list, buyer_list, buyer_name, not_found_cards)
 
             involved_cards = find_shipping_by_list(shipment_details, buyer_list, buyer_name)
             cards_per_buyer[buyer_name] = involved_cards

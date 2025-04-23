@@ -14,13 +14,13 @@ if __name__ == "__main__":
     
     notFound = {}
     listGab = read_card_list(os.path.join(txt_folder, 'mkm_order_1_gabriele.txt'))
-    list_check(simpleCardsList, listGab, "Gabriele", notFound)
+    simpleCardsList = list_check(simpleCardsList, listGab, "Gabriele", notFound)
 
     listFed = read_card_list(os.path.join(txt_folder, 'mkm_order_1_federico.txt'))
-    list_check(simpleCardsList, listFed, "Federico", notFound)
+    simpleCardsList = list_check(simpleCardsList, listFed, "Federico", notFound)
 
     listAng = read_card_list(os.path.join(txt_folder, 'mkm_order_1_angelo.txt'))
-    list_check(simpleCardsList, listAng, "Angelo", notFound)
+    simpleCardsList = list_check(simpleCardsList, listAng, "Angelo", notFound)
     
     print("\nThe following cards were NOT found in the input card list:")
     print_list(notFound)
