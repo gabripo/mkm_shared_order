@@ -26,7 +26,7 @@ def save_fields():
     buyers_data = data['buyers']
 
     try:
-        txt_folder = determine_output_folder()
+        txt_folder = determine_output_folder(clear_folder=True)
         email_content_txt_file = os.path.join(txt_folder, EMAIL_CONTENT_TXT_FILE)
         with open(email_content_txt_file, 'w') as f:
             f.write(email_content)

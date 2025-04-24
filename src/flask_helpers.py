@@ -13,7 +13,7 @@ def determine_flask_session_id():
         session['session_id'] = session_id
     return session_id
 
-def determine_output_folder() -> str:
+def determine_output_folder(clear_folder: bool = False) -> str:
     if os.getenv("APP_IN_DOCKER") == "Yes":
         print("DOCKER EXECUTION DETECTED")
         session_id = determine_flask_session_id()
@@ -23,7 +23,8 @@ def determine_output_folder() -> str:
         output_dir = os.path.abspath(os.path.join(os.getcwd(), 'txt_files'))
         print(f"Txt files directory set as: {output_dir}")
 
-    if os.path.exists(output_dir):
-        shutil.rmtree(output_dir)
-    os.makedirs(output_dir)
+    if clear_folder:
+        shutil.rmtree(output_dir, ignore_errors=True)
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
     return output_dir
