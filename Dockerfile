@@ -23,7 +23,7 @@ ENV PYTHONUNBUFFERED=TRUE
 # CMD ["flask_app.py"]
 
 # entrypoint with gunicorn
-ENV NumWorkers=1
+ENV NumWorkers=4
 ENV NumThreads=1
 ENV WorkerTimeoutSeconds=3600
 ENTRYPOINT gunicorn --bind 0.0.0.0:${TargetPort} flask_app:app -w ${NumWorkers} --threads ${NumThreads} --timeout ${WorkerTimeoutSeconds}
