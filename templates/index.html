@@ -190,6 +190,15 @@
 
             if (hasContent) {
                 visualizationContainer.style.display = 'block';
+                // Hide the analysis results if no email content is provided
+                const costsPerBuyerDiv = document.getElementById('costsPerBuyerDiv');
+                const cardsPerBuyerDiv = document.getElementById('cardsPerBuyerDiv');
+                const notFoundCardsDiv = document.getElementById('notFoundCardsDiv');
+                const spareCardsDiv = document.getElementById('spareCardsDiv');
+                costsPerBuyerDiv.style.display = 'none';
+                cardsPerBuyerDiv.style.display = 'none';
+                notFoundCardsDiv.style.display = 'none';
+                spareCardsDiv.style.display = 'none';
             } else {
                 visualizationContainer.style.display = 'none';
             }
@@ -245,6 +254,7 @@
             const costsPerBuyerJs = JSON.stringify(costsPerBuyer, null, 2);
             const costsPerBuyerDiv = document.getElementById('costsPerBuyerDiv');
             if (Object.keys(costsPerBuyer).length > 0) {
+                costsPerBuyerDiv.style.display = 'block';
                 costsPerBuyerDiv.innerHTML = `
                 <h3>Costs per buyer:</h3>
                 <pre>${costsPerBuyerJs}</pre>
@@ -281,6 +291,7 @@
             }
 
             if (content) {
+                cardsPerBuyerDiv.style.display = 'block';
                 cardsPerBuyerDiv.innerHTML = `
             <h3>Cards per buyer:</h3>
             ${content}
@@ -296,6 +307,7 @@
             const numNotFoundCards = Object.values(notFoundCards).reduce((acc, val) => acc + val, 0)
             const notFoundDiv = document.getElementById('notFoundCardsDiv');
             if (Object.keys(notFoundCards).length > 0) {
+                notFoundDiv.style.display = 'block';
                 notFoundDiv.innerHTML = `
                 <h3>Wanted Cards but not found in the order - ${numDifferentCards} different cards, ${numNotFoundCards} in total:</h3>
                 <pre>${notFoundCardsJs}</pre>
@@ -310,6 +322,7 @@
             const numDifferentCards = Object.keys(spareCards).length
             const spareCardsDiv = document.getElementById('spareCardsDiv');
             if (Object.keys(spareCards).length > 0) {
+                spareCardsDiv.style.display = 'block';
                 spareCardsDiv.innerHTML = `
                 <h3>Spare Cards per order - ${numDifferentCards} different cards:</h3>
                 <pre>${spareCardsJs}</pre>
