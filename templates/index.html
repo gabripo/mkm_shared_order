@@ -233,9 +233,9 @@
                     const result = await response.json();
                     console.log('Buyers analyzed successfully:', result);
                     if (result.computationError !== 0.0) {
-                        alert(`The computation was not perfectly exact, with an error of ${result.computationError}! This could be bad news. Please check the backend logic.`);
+                        console.log(`The computation was not perfectly exact, with an error of ${result.computationError}! This could be bad news. Please check the backend logic.`);
                     }
-                    updateCostsPerBuyer(result.costsPerBuyer);
+                    updateCostsPerBuyer(result.costsPerBuyer, result.computationError);
                     updateCardsPerBuyer(result.cardsPerBuyer);
                     updateNotFoundInfo(result.notFoundCards);
                     updateSpareInfo(result.spareCards);
@@ -250,7 +250,7 @@
             }
         }
 
-        function updateCostsPerBuyer(costsPerBuyer) {
+        function updateCostsPerBuyer(costsPerBuyer, computationError) {
             const costsPerBuyerJs = JSON.stringify(costsPerBuyer, null, 2);
             const costsPerBuyerDiv = document.getElementById('costsPerBuyerDiv');
             if (Object.keys(costsPerBuyer).length > 0) {
@@ -258,6 +258,8 @@
                 costsPerBuyerDiv.innerHTML = `
                 <h3>Costs per buyer:</h3>
                 <pre>${costsPerBuyerJs}</pre>
+                <h3>Computation Error: ${computationError.toFixed(2)}</h3>
+                <p>Note: The computation error indicates the difference between the total costs and the sum of the individual buyer costs. A value close to 0.00 is ideal.</p>
                 `;
             } else {
                 costsPerBuyerDiv.innerHTML = '';
