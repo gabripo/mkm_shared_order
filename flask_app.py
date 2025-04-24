@@ -1,38 +1,13 @@
 import os
-import shutil
-import uuid
-import tempfile
-from flask import Flask, render_template, request, jsonify, session
+import secrets
+from flask import Flask, render_template, request, jsonify
+from src.flask_helpers import determine_output_folder, EMAIL_CONTENT_TXT_FILE
 from src.mkm_order_parser import find_shipping_by_list, list_check, total_cost_by_list
 from src.read_cards import read_card_list
 from src.parse_gmail_mkm import parse_mail_txt
 
-def determine_flask_session_id():
-    session_id = session.get('session_id')
-    if not session_id:
-        session_id = str(uuid.uuid4())
-        session['session_id'] = session_id
-    return session_id
-
-def determine_output_folder() -> str:
-    if os.getenv("APP_IN_DOCKER") == "Yes":
-        print("DOCKER EXECUTION DETECTED")
-        session_id = determine_flask_session_id()
-        output_dir = os.path.join(tempfile.gettempdir(), session_id)
-        print(f"Txt files directory for session id {session_id} set as: {output_dir}")
-    else:
-        output_dir = os.path.abspath(os.path.join(os.getcwd(), 'txt_files'))
-        print(f"Txt files directory set as: {output_dir}")
-
-    if os.path.exists(output_dir):
-        shutil.rmtree(output_dir)
-    os.makedirs(output_dir)
-    return output_dir
-
-txt_folder = determine_output_folder()
-email_content_txt_file = os.path.join(txt_folder, 'email_content.txt')
-
 app = Flask(__name__)
+app.secret_key = secrets.token_hex(16) # needed for sessions management
 
 @app.route('/')
 def home():
@@ -51,6 +26,8 @@ def save_fields():
     buyers_data = data['buyers']
 
     try:
+        txt_folder = determine_output_folder()
+        email_content_txt_file = os.path.join(txt_folder, EMAIL_CONTENT_TXT_FILE)
         with open(email_content_txt_file, 'w') as f:
             f.write(email_content)
         
@@ -67,6 +44,8 @@ def save_fields():
     
 @app.route('/analyze_email', methods=['POST'])
 def analyze_email():
+    txt_folder = determine_output_folder()
+    email_content_txt_file = os.path.join(txt_folder, EMAIL_CONTENT_TXT_FILE)
     if not os.path.exists(email_content_txt_file):
         return jsonify({'message': 'Email content file not found'}), 500
     
@@ -82,6 +61,8 @@ def analyze_email():
 
 @app.route('/analyze_buyers', methods=['POST'])
 def analyze_buyers():
+    txt_folder = determine_output_folder()
+    email_content_txt_file = os.path.join(txt_folder, EMAIL_CONTENT_TXT_FILE)
     if not os.path.exists(txt_folder):
         return jsonify({'message': 'Buyers folder not found'}), 500
     
